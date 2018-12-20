@@ -1,27 +1,51 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace AlytaloXamarin
 {
+
     public partial class MainPage : ContentPage
     {
-        private int saunanLampotila;
-        private string saunaPaalla;
+
+
+        public class SaunaClass
+        {
+        private int saunanLampotila { get; set; }
+        private string saunaPaalla { get; set; }
+        }
+
+        private string uri = "https://alytalocontroller.azurewebsites.net/sauna/";
+        HttpClient client = new HttpClient();
 
         public MainPage()
         {
             InitializeComponent();
         }
 
-        private void Sauna_clicked(object sender, EventArgs e)
+
+        private async void Sauna_clicked(object sender, EventArgs e)
             {
-            SaunanNykyLampotila.Text = "Tähän tulee lämpötila";
-            SaunanTila.Text = "Pällä/pois";
-            }
+            SaunanNykyLampotila.Text = uri;
+
+            var content = "";
+            HttpClient webClient = new HttpClient();
+            var url = "https://alytalocontroller.azurewebsites.net/sauna/";
+            client.BaseAddress = new Uri(url);
+
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = await client.GetAsync(url);
+            content = await response.Content.ReadAsStringAsync();
+            var Items = JsonConvert.DeserializeObject<List<SaunaClass>>(content);
+            SaunanTila.ItemsSource = Items;
+
+        }
         private void Valot_clicked(object sender, EventArgs e)
         {
             ValonTila.Text = "Pällä/pois";

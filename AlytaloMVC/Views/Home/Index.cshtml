@@ -1,0 +1,159 @@
+﻿@{
+	ViewBag.Title = "Index";
+}
+@section scripts {
+
+	<script type="text/javascript">
+
+		function päivitäAsiakaslistaus() {
+			$.getJSON("/home/getlist", null, function (json) {
+				var saunas = JSON.parse(json);
+				//alert("Asiakkaiden lkm: " + customers.length);
+
+				var html = "";
+				for (var index = 0; index < saunas.length; index++) {
+					html += "<tr>" +
+						"<td><a href='#'><span class='glyphicon glyphicon-pencil'></span></a></td>" +
+						"<td>" + saunas[index].saunaID + "</td>" +
+						"<td>" + saunas[index].SaunanTila + "</td>" +
+						"<td>" + saunas[index].SaunanNykyLampotila + "</td>" +
+						"<td><a href='#'><span class='glyphicon glyphicon-trash'></span></a></td>" +
+						"</tr>\r\n";
+				}
+
+				$("#saunaList tbody").html(html);
+
+				// tietojen muokkaus
+				$(".glyphicon-pencil").click(function () {
+					// etsitään asiakkaan tiedot klikatulta riviltä
+					var saunaId = $(this).parent().parent().next().text();
+
+					// haetaan asiakkaan tiedot id:n perusteella
+					$.getJSON("/home/getsinglecustomer/" + saunaId, null, function (json2) {
+						var customer = JSON.parse(json2);
+
+						// kopioidaan tiedot ikkunaan
+						$("#saunaModal_SaunaID").val(sauna.SaunaID);
+						$("#saunaModal_SaunanTila").val(sauna.SaunanTila);
+						$("#saunaModal_SaunanNykyLampotila").val(sauna.SaunanNykyLampotila);
+
+						// näytetään ikkuna
+						$("#saunaModalTitle").text("Muokkaa saunaa");
+						$("#saunaModalDialog").modal("show");
+					});
+				});
+
+				// tietojen poisto
+				$(".glyphicon-trash").click(function () {
+					// etsitään asiakkaan tiedot klikatulta riviltä
+					console.log("Poistoa klikattu");
+					var saunaId = $(this).parent().parent().prev().prev().prev().prev().text();
+					var ok = confirm("Haluatko varmasti poistaa" + saunaId + "?");
+
+					if (ok == true) {
+						$.getJSON("/sauna/delete/" + saunaId, null, function (status) {
+							if (status == true) {
+								alert("Sauna on poistettu");
+								päivitäSauna();
+							}
+							else {
+								alert("Poistaminen ei onnistunut, yritä uudelleen!");
+							}
+						});
+					}
+				});
+			});
+		}
+
+		// sivun alustaminen
+		$(function () {
+			päivitäSaunalistaus();
+
+			$("#addNewSaunaButton").click(function () {
+
+				// tyhjennetään ikkunan tiedot
+				$("#saunaModal_SaunaID").val("(uusi)");
+				$("#saunaModal_SaunanTila").val("");
+				$("#saunaModal_SaunanNykyLampotila").val("");
+
+				$("#saunaModalTitle").text("Lisää uusi");
+				$("#saunaModalDialog").modal("show");
+			});
+
+			$("saunaModalSaveButton").click(function () {
+				// luetaan käyttäjän syöttämät kentät
+				var details = {
+					HenkiloID: $("#saunaModal_saunaId").val(),
+					SaunanTila: $("#saunaModal_SaunanTila").val(),
+					SaunanNykyLampotila: $("#saunaModal_SaunanNykyLampotila").val(),
+				};
+
+				$.post("/sauna/update/", details, function (status) {
+					if (status == true) {
+						alert("Uudet tiedot tallennettu!");
+						$("saunaModalDialog").modal("hide");
+						päivitäAsiakaslistaus();
+					}
+					else {
+						alert("Tallennus ei onnistunut, yritä uudelleen!");
+					}
+				});
+			});
+
+			console.log("Alustus valmis!");
+		});
+	</script>
+
+}
+<h2>Sauna</h2>
+<button class="btn btn-primary" id="addNewSaunaButton">Lisää uusi</button>
+
+<table class="table table-striped" id="saunaList">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Sauna ID</th>
+			<th>SaunanTila</th>
+			<th>Saunan Lämpötila</th>
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="customerModalDialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title"><span id="customerModalTitle">Muokkaa asiakasta</span></h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-3">Henkilö ID</div>
+					<div class="col-md-6"><input class="form-control" id="customerModal_CustId" type="text" readonly></div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">Etunimi</div>
+					<div class="col-md-6"><input class="form-control" id="customerModal_Etunimi" type="text"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">Sukunimi</div>
+					<div class="col-md-6"><input class="form-control" id="customerModal_Sukunimi" type="text"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">Osoite</div>
+					<div class="col-md-6"><input class="form-control" id="customerModal_Osoite" type="text"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">Esimies</div>
+					<div class="col-md-6"><input class="form-control" id="customerModal_Esimies" type="text"></div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Sulje</button>
+				<button type="button" class="btn btn-primary" id="customerModalSaveButton">Tallenna</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

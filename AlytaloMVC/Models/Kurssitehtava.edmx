@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="KurssitehtavaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Sauna">
+          <Key>
+            <PropertyRef Name="SaunaID" />
+          </Key>
+          <Property Name="SaunaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SaunanTila" Type="varchar" MaxLength="50" />
+          <Property Name="SaunanNykyLampotila" Type="int" />
+        </EntityType>
+        <EntityType Name="Termostaatti">
+          <Key>
+            <PropertyRef Name="LampotilaID" />
+          </Key>
+          <Property Name="LampotilaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TalonTavoiteLampotila" Type="int" />
+          <Property Name="TalonNykyLampotila" Type="int" />
+        </EntityType>
+        <EntityType Name="Valot">
+          <Key>
+            <PropertyRef Name="ValoID" />
+          </Key>
+          <Property Name="ValoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ValonTila" Type="varchar" MaxLength="50" />
+          <Property Name="ValonMaara" Type="int" />
+        </EntityType>
+        <EntityContainer Name="KurssitehtavaModelStoreContainer">
+          <EntitySet Name="Sauna" EntityType="Self.Sauna" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Termostaatti" EntityType="Self.Termostaatti" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Valot" EntityType="Self.Valot" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="KurssitehtavaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Sauna">
+          <Key>
+            <PropertyRef Name="SaunaID" />
+          </Key>
+          <Property Name="SaunaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SaunanTila" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SaunanNykyLampotila" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Termostaatti">
+          <Key>
+            <PropertyRef Name="LampotilaID" />
+          </Key>
+          <Property Name="LampotilaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TalonTavoiteLampotila" Type="Int32" />
+          <Property Name="TalonNykyLampotila" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Valot">
+          <Key>
+            <PropertyRef Name="ValoID" />
+          </Key>
+          <Property Name="ValoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ValonTila" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ValonMaara" Type="Int32" />
+        </EntityType>
+        <EntityContainer Name="KurssitehtavaEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Sauna" EntityType="Self.Sauna" />
+          <EntitySet Name="Termostaatti" EntityType="Self.Termostaatti" />
+          <EntitySet Name="Valot" EntityType="Self.Valot" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="KurssitehtavaModelStoreContainer" CdmEntityContainer="KurssitehtavaEntities1">
+          <EntitySetMapping Name="Sauna">
+            <EntityTypeMapping TypeName="KurssitehtavaModel.Sauna">
+              <MappingFragment StoreEntitySet="Sauna">
+                <ScalarProperty Name="SaunaID" ColumnName="SaunaID" />
+                <ScalarProperty Name="SaunanTila" ColumnName="SaunanTila" />
+                <ScalarProperty Name="SaunanNykyLampotila" ColumnName="SaunanNykyLampotila" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Termostaatti">
+            <EntityTypeMapping TypeName="KurssitehtavaModel.Termostaatti">
+              <MappingFragment StoreEntitySet="Termostaatti">
+                <ScalarProperty Name="LampotilaID" ColumnName="LampotilaID" />
+                <ScalarProperty Name="TalonTavoiteLampotila" ColumnName="TalonTavoiteLampotila" />
+                <ScalarProperty Name="TalonNykyLampotila" ColumnName="TalonNykyLampotila" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Valot">
+            <EntityTypeMapping TypeName="KurssitehtavaModel.Valot">
+              <MappingFragment StoreEntitySet="Valot">
+                <ScalarProperty Name="ValoID" ColumnName="ValoID" />
+                <ScalarProperty Name="ValonTila" ColumnName="ValonTila" />
+                <ScalarProperty Name="ValonMaara" ColumnName="ValonMaara" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
